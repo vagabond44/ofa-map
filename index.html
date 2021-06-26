@@ -1,0 +1,73 @@
+<html>
+
+<head>
+    <!-- https://code.jquery.com/jquery-3.6.0.min.js -->
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <!-- https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js -->
+    <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
+    <!-- https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css -->
+    <link rel="stylesheet" type="text/css" href="css/jquery.dataTables.min.css">
+
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+</head>
+
+<body>
+    <div class="header">
+        <img src="images/ofa.png"/>
+        <span>OFA Fief Quests Guide</h2>
+    </div>
+    <div id="map-container">
+        <img src="images/Ungverija.webp" />
+        <div id="marker" class="location hide"></div>
+        
+    </div>
+    <div id="table-container">
+        <table id="fief-table" class="display" width="50%"></table>
+    </div>
+    <script type="text/javascript" src="js/data.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".location").click(function () {
+                if (!$(this).hasClass(".active")) {
+                    $(".location.active").removeClass("active");
+                    $(this).addClass("active")
+                }
+            });
+        });        
+
+        $(document).ready(function () {
+            var table = $('#fief-table')
+                .DataTable({
+                    data: fiefQuests,
+                    columns: [
+                        { title: "Fief" },
+                        { title: "Star" },
+                        { title: "Resource" },
+                        { title: "Amount" }
+                    ],
+                    paging: false
+
+                });
+
+            $('#fief-table tbody')
+                .on('mouseenter', 'tr', function () {
+                    var data = table.row(this).data();
+                    var coordinate = coordinateMap[data[0]]
+                    console.log("coordinates: " + coordinate.x + ', ' + coordinate.y)
+                    var marker = $('#marker')
+                    marker.removeClass('hide')
+                    marker.addClass('show')
+                    marker.css('top', coordinate.y - 13)
+                    marker.css('left', coordinate.x - 13)
+                })
+                .on('mouseleave', 'tr', function () {
+                    var data = table.row(this).data();
+                    var marker = $('#marker')
+                    marker.removeClass('show')
+                    marker.addClass('hide')
+                }); 
+        });
+    </script>
+</body>
+
+</html>
